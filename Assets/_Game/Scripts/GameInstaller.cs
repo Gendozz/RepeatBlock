@@ -15,7 +15,6 @@ public class GameInstaller : MonoInstaller
         Container.BindInterfacesTo<RightWayChecker>().AsSingle();
         Container.BindInterfacesTo<AllBlocksMovedChecker>().AsSingle();
 
-
         Container.BindInterfacesTo<RestartGame>().AsSingle();
 
         Container.BindFactory<BlockFacade, BlockFacade.Factory>()

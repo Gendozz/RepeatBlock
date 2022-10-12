@@ -9,9 +9,9 @@ public class PlayerMoveImitator : IInitializable, ITickable
 
     private readonly SignalBus _signalBus;
 
-    private readonly PlayerInputHandler _playerInputHandler;
+    private readonly UserInputQueue _userInputQueue;
 
-    private bool _canMove = false;
+    private bool _canMove = true;
 
     private bool _toFinishActions = false;
 
@@ -23,19 +23,19 @@ public class PlayerMoveImitator : IInitializable, ITickable
         PlayerView playerView,
         Settings settings,
         SignalBus signalBus,
-        PlayerInputHandler playerInputHandler)
+        UserInputQueue userInputQueue)
     {
         _playerView = playerView;
         _settings = settings;
         _signalBus = signalBus;
-        _playerInputHandler = playerInputHandler;
+        _userInputQueue = userInputQueue;
     }
 
     public void Initialize()
     {
         _signalBus.Subscribe<PlayerMovedWrongWay>(() => _toFinishActions = true);
-        _signalBus.Subscribe<PlayerFinishedSequence>(() => _canMove = false);
-        _signalBus.Subscribe<AllBlocksMoved>(() => _canMove = true);
+        //_signalBus.Subscribe<PlayerFinishedSequence>(() => _canMove = false);
+        //_signalBus.Subscribe<AllBlocksMoved>(() => _canMove = true);
     }
 
     public void Tick()
@@ -44,7 +44,7 @@ public class PlayerMoveImitator : IInitializable, ITickable
         {
             return;
         }
-        if (!_playerInputHandler.HasNextInputDirections)
+        if (!_userInputQueue.HasNextInputDirections)
         {
             return;
         }
@@ -54,7 +54,7 @@ public class PlayerMoveImitator : IInitializable, ITickable
 
     private void HandleMoveDirection()
     {
-        DirectionToMove inputDirection = _playerInputHandler.GetNextDirection();
+        DirectionToMove inputDirection = _userInputQueue.GetNextDirection();
 
         _signalBus.Fire(new PlayerMoved { direction = inputDirection });
 
