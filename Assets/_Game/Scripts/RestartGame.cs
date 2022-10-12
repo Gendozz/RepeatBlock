@@ -5,7 +5,7 @@ using Zenject;
 
 public class RestartGame : IInitializable, IDisposable
 {
-    readonly SignalBus _signalBus;
+    private readonly SignalBus _signalBus;
 
     public Settings _settings;
 

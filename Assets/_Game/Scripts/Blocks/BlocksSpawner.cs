@@ -6,14 +6,14 @@ using Cysharp.Threading.Tasks;
 
 public class BlocksSpawner : IInitializable
 {
-    readonly BlockFacade.Factory _blockFactory;
-    readonly Settings _settings;
-    readonly SignalBus _signalBus;
-
-    private float _desiredNumBlocks;
+    private readonly BlockFacade.Factory _blockFactory;
+    private readonly Settings _settings;
+    private readonly SignalBus _signalBus;
 
     private Vector3 _firstBlockPosition;
-    
+
+    public float BlocksInSequence { get; private set; }
+
     public Vector3[] CurrentBlockSequence { get; private set; }
 
     public DirectionToMove[] directionsSequence { get; private set; }
@@ -27,7 +27,7 @@ public class BlocksSpawner : IInitializable
         _signalBus = signalBus;
         _blockFactory = blockFactory;
 
-        _desiredNumBlocks = _settings.NumBlocksStartAmount;
+        BlocksInSequence = _settings.NumBlocksStartAmount;
         _firstBlockPosition = new Vector3(0, _settings.yHeightCreatePosition, 0);
     }
 
@@ -43,6 +43,8 @@ public class BlocksSpawner : IInitializable
 
         CurrentBlockSequence = GenerateNewSequence();
 
+        _signalBus.Fire<BlocksGenerationCompleted>();
+
         for (int i = 0; i < CurrentBlockSequence.Length; i++)
         {
             SpawnBlock(CurrentBlockSequence[i]);
@@ -54,9 +56,9 @@ public class BlocksSpawner : IInitializable
     {
         //Debug.Log($"Generation started. FirstBlockPosition = {_firstBlockPosition}");
 
-        Vector3[] blocksPositions = new Vector3[(int)_desiredNumBlocks];
+        Vector3[] blocksPositions = new Vector3[(int)BlocksInSequence];
 
-        directionsSequence = new DirectionToMove[(int)_desiredNumBlocks];
+        directionsSequence = new DirectionToMove[(int)BlocksInSequence];
 
         blocksPositions[0] = _firstBlockPosition;                // ATTENTION
 

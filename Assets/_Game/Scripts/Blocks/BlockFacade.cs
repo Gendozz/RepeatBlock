@@ -6,11 +6,11 @@ public class BlockFacade : MonoBehaviour, IPoolable<IMemoryPool>, IDisposable
 {
     private BlockView _view;
     private BlockTunables _blockTunables;
-    private BlockMove _blockMove;
-    IMemoryPool _pool;
+    private BlockMoveUpDown _blockMove;
+    private IMemoryPool _pool;
 
     [Inject]
-    public void Construct(BlockView view, BlockTunables blockTunables, BlockMove blockMove)
+    public void Construct(BlockView view, BlockTunables blockTunables, BlockMoveUpDown blockMove)
     {
         _view = view;
         _blockTunables = blockTunables;
@@ -25,6 +25,8 @@ public class BlockFacade : MonoBehaviour, IPoolable<IMemoryPool>, IDisposable
 
     public void Dispose()
     {
+        //Debug.Log($"Facade transform from BlockFacade {transform.GetHashCode()}");
+
         _pool.Despawn(this);
     }
 

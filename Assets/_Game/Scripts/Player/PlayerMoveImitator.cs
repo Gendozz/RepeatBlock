@@ -5,13 +5,13 @@ using System;
 
 public class PlayerMoveImitator : IInitializable, ITickable
 {
-    readonly PlayerView _playerView;
+    private readonly PlayerView _playerView;
 
-    readonly SignalBus _signalBus;
+    private readonly SignalBus _signalBus;
 
-    readonly PlayerInputHandler _playerInputHandler;
+    private readonly PlayerInputHandler _playerInputHandler;
 
-    private bool _canMove = true;
+    private bool _canMove = false;
 
     private bool _toFinishActions = false;
 
@@ -34,6 +34,8 @@ public class PlayerMoveImitator : IInitializable, ITickable
     public void Initialize()
     {
         _signalBus.Subscribe<PlayerMovedWrongWay>(() => _toFinishActions = true);
+        _signalBus.Subscribe<PlayerFinishedSequence>(() => _canMove = false);
+        _signalBus.Subscribe<AllBlocksMoved>(() => _canMove = true);
     }
 
     public void Tick()
@@ -42,7 +44,7 @@ public class PlayerMoveImitator : IInitializable, ITickable
         {
             return;
         }
-        if (!_playerInputHandler._HasNextinputDirections)
+        if (!_playerInputHandler.HasNextInputDirections)
         {
             return;
         }

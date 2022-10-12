@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   BlocksSpawner:
-    NumBlocksStartAmount: 6
+    NumBlocksStartAmount: 10
     NumBlocksIncreaseRate: 0.5
     maxSequence: 10
     maxOneSideSequence: 4
@@ -31,6 +31,8 @@ MonoBehaviour:
       moveDuration: 1
     MoveBlockGroup:
       moveDuration: 0.5
+    BlockOutOfViewChecker:
+      xOrZCoordToDispose: -5
   Player:
     PlayerMoveImitator:
       yMoveHeight: 0.2

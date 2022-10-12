@@ -11,6 +11,13 @@ public class GameSignalsInstaller : Installer<GameSignalsInstaller>
         Container.DeclareSignal<PlayerMoved>();
         Container.DeclareSignal<PlayerMovedWrongWay>();
 
-        Container.BindSignal<PlayerFinishedSequence>().ToMethod(() => Debug.Log("Test bind signals"));
+        Container.DeclareSignal<NewBlocksGenerationRequired>();
+        Container.DeclareSignal<BlocksGenerationCompleted>();
+
+        Container.DeclareSignal<BlockMoved>();
+        Container.DeclareSignal<AllBlocksMoved>();
+
+
+        //Container.BindSignal<PlayerFinishedSequence>().ToMethod(() => Debug.Log("Test bind signals"));
     }
 }

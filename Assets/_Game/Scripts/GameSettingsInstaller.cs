@@ -17,8 +17,9 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
     public class BlockSettings
     {
         public BlockTunables BlockTunables;
-        public BlockMove.Settings BlockMove;
-        public MoveBlockGroupTransform.Settings MoveBlockGroup;
+        public BlockMoveUpDown.Settings BlockMove;
+        public BlockMoveOnPlayerMove.Settings MoveBlockGroup;
+        public BlockOutOfViewChecker.Settings BlockOutOfViewChecker;
     }
 
     [Serializable]
@@ -27,15 +28,15 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
         public PlayerMoveImitator.Settings PlayerMoveImitator;
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public override void InstallBindings()
     {
         Container.BindInstance(BlocksSpawner).IfNotBound();
         Container.BindInstance(GameInstaller).IfNotBound();
 
         Container.BindInstance(Block.BlockMove).IfNotBound();
-
         Container.BindInstance(Block.MoveBlockGroup).IfNotBound();
-
+        Container.BindInstance(Block.BlockOutOfViewChecker).IfNotBound();
 
         Container.BindInstance(Player.PlayerMoveImitator).IfNotBound();
 

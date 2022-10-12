@@ -3,9 +3,9 @@ using Zenject;
 
 public class RightWayChecker : IInitializable
 {
-    readonly BlocksSpawner _blocksSpawner;
+    private readonly BlocksSpawner _blocksSpawner;
 
-    readonly SignalBus _signalBus;
+    private readonly SignalBus _signalBus;
 
     private int _movesCounter = 0;
 
@@ -27,7 +27,7 @@ public class RightWayChecker : IInitializable
 
         if (currentMove.Equals(_blocksSpawner.directionsSequence[_movesCounter]))
         {
-            Debug.Log("Going right!");
+            //Debug.Log("Going right!");
 
             if (_movesCounter == _blocksSpawner.directionsSequence.Length - 1)
             {

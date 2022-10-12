@@ -2,14 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-
 public class PlayerInputHandler : ITickable
 {
-    readonly UserInputState _inputState;
+    private readonly UserInputState _inputState;
 
     private Queue<DirectionToMove> _inputDirections = new Queue<DirectionToMove>();
 
-    public bool _HasNextinputDirections
+    public bool HasNextInputDirections
     {
         get { return _inputDirections.Count > 0; }
     }

@@ -5,13 +5,16 @@ using Zenject;
 public class GameInstaller : MonoInstaller
 {
     [Inject]
-    Settings _settings = null;
+    private Settings _settings = null;
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public override void InstallBindings()
     {
         Container.BindInterfacesAndSelfTo<BlocksSpawner>().AsSingle();
 
         Container.BindInterfacesTo<RightWayChecker>().AsSingle();
+        Container.BindInterfacesTo<AllBlocksMovedChecker>().AsSingle();
+
 
         Container.BindInterfacesTo<RestartGame>().AsSingle();
 
