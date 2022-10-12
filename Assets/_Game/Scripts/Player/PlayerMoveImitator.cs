@@ -3,9 +3,8 @@ using DG.Tweening;
 using Zenject;
 using System;
 
-public class PlayerMoveImitator : ITickable
+public class PlayerMoveImitator : IInitializable, ITickable
 {
-
     readonly PlayerView _playerView;
 
     readonly SignalBus _signalBus;
@@ -13,6 +12,10 @@ public class PlayerMoveImitator : ITickable
     readonly PlayerInputHandler _playerInputHandler;
 
     private bool _canMove = true;
+
+    private bool _toFinishActions = false;
+
+    private Sequence moveImitation;
 
     public Settings _settings = null;
 
@@ -28,6 +31,11 @@ public class PlayerMoveImitator : ITickable
         _playerInputHandler = playerInputHandler;
     }
 
+    public void Initialize()
+    {
+        _signalBus.Subscribe<PlayerMovedWrongWay>(() => _toFinishActions = true);
+    }
+
     public void Tick()
     {
         if (!_canMove)
@@ -39,23 +47,22 @@ public class PlayerMoveImitator : ITickable
             return;
         }
 
-
         HandleMoveDirection();
     }
 
     private void HandleMoveDirection()
     {
-        InputDirection inputDirection = _playerInputHandler.GetNextDirection();
+        DirectionToMove inputDirection = _playerInputHandler.GetNextDirection();
 
-        _signalBus.Fire(new PlayerMoved { direction = inputDirection});
+        _signalBus.Fire(new PlayerMoved { direction = inputDirection });
 
 
         switch (inputDirection)
         {
-            case InputDirection.Left:
+            case DirectionToMove.Left:
                 ImitateMoving(new Vector3(90, 0, -0));
                 break;
-            case InputDirection.Right:
+            case DirectionToMove.Right:
                 ImitateMoving(new Vector3(0, 0, -90f));
                 break;
             default:
@@ -66,15 +73,22 @@ public class PlayerMoveImitator : ITickable
     private void ImitateMoving(Vector3 neededRotation)
     {
         _canMove = false;
-        Sequence moveImitation = DOTween.Sequence();
+        moveImitation = DOTween.Sequence();
         moveImitation.Append(_playerView.transform.DOMoveY(_settings.yMoveHeight, _settings.moveDuration / 2)).SetLoops(2, LoopType.Yoyo);
-        _playerView.transform.DORotate(_playerView.transform.rotation.eulerAngles + neededRotation, _settings.moveDuration).SetEase(Ease.Linear).OnComplete(ResetState);
+        _playerView.transform.DORotate(_playerView.transform.rotation.eulerAngles + neededRotation, _settings.moveDuration).SetEase(Ease.Linear).OnComplete(ImitateMovingEndAction);
     }
 
-    private void ResetState()
+    private void ImitateMovingEndAction()
     {
-        _canMove = true;
-        _playerView.transform.rotation = Quaternion.identity;
+        if (!_toFinishActions)
+        {
+            _canMove = true;
+            _playerView.transform.rotation = Quaternion.identity;
+        }
+        else
+        {
+            _playerView.transform.DOMoveY(-10, _settings.loseFallingDuration);
+        }
     }
 
     [Serializable]
@@ -82,6 +96,8 @@ public class PlayerMoveImitator : ITickable
     {
         public float yMoveHeight;
         public float moveDuration;
+
+        public float loseFallingDuration;
     }
 
 }

@@ -10,6 +10,8 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
     public BlockSettings Block;
     public PlayerSettings Player;
 
+    public RestartGame.Settings RestartGame;
+
 
     [Serializable]
     public class BlockSettings
@@ -36,6 +38,8 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
 
 
         Container.BindInstance(Player.PlayerMoveImitator).IfNotBound();
+
+        Container.BindInstance(RestartGame).IfNotBound();
     }
 
     private void OnValidate()

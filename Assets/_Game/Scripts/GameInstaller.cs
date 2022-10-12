@@ -9,17 +9,15 @@ public class GameInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
-        //Container.Bind<UserInputState>().AsSingle();
-
-        //Container.BindInterfacesAndSelfTo<PlayerMoveImitator>().AsSingle();
-
-        //Container.BindInterfacesAndSelfTo<PlayerInputHandler>().AsSingle();
-
         Container.BindInterfacesAndSelfTo<BlocksSpawner>().AsSingle();
+
+        Container.BindInterfacesTo<RightWayChecker>().AsSingle();
+
+        Container.BindInterfacesTo<RestartGame>().AsSingle();
 
         Container.BindFactory<BlockFacade, BlockFacade.Factory>()
             .FromPoolableMemoryPool<BlockFacade, BlockFacadePool>(poolBinder => poolBinder
-            .WithInitialSize(10)
+            .WithInitialSize(_settings.PoolInitialSize)
             .FromSubContainerResolve()
             .ByNewPrefabInstaller<BlockInstaller>(_settings.BlockFacadePrefab)
             .UnderTransformGroup("Blocks"));
@@ -32,6 +30,7 @@ public class GameInstaller : MonoInstaller
     public class Settings
     {
         public GameObject BlockFacadePrefab;
+        public int PoolInitialSize;
     }
 
     class BlockFacadePool : MonoPoolableMemoryPool<IMemoryPool, BlockFacade>

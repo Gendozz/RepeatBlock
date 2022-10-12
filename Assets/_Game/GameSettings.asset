@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   BlocksSpawner:
-    NumBlocksStartAmount: 10
+    NumBlocksStartAmount: 6
     NumBlocksIncreaseRate: 0.5
     maxSequence: 10
-    maxOneSideSequence: 3
+    maxOneSideSequence: 4
     DelayBetweenNextSpawnInCurrentWave: 0.2
-    DelayBeforeStartNestSpawnWave: 1
+    DelayBeforeStartNextSpawnWave: 1.1
     yHeightCreatePosition: -15
   GameInstaller:
     BlockFacadePrefab: {fileID: 1818200915671438740, guid: 3abc9ea30b4d68c45b53da321b899cd0, type: 3}
+    PoolInitialSize: 20
   Block:
     BlockTunables:
       _color: {r: 0, g: 0, b: 0, a: 0}
@@ -29,8 +30,11 @@ MonoBehaviour:
       yHeight: -5.5
       moveDuration: 1
     MoveBlockGroup:
-      moveDuration: 1
+      moveDuration: 0.5
   Player:
     PlayerMoveImitator:
       yMoveHeight: 0.2
       moveDuration: 0.5
+      loseFallingDuration: 3
+  RestartGame:
+    delayBeforeRestart: 3

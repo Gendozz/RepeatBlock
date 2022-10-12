@@ -7,9 +7,10 @@ public class GameSignalsInstaller : Installer<GameSignalsInstaller>
     {
         SignalBusInstaller.Install(Container);
 
-        Container.DeclareSignal<NewGenerationRequired>();
+        Container.DeclareSignal<PlayerFinishedSequence>();
         Container.DeclareSignal<PlayerMoved>();
+        Container.DeclareSignal<PlayerMovedWrongWay>();
 
-        Container.BindSignal<NewGenerationRequired>().ToMethod(() => Debug.Log("Test bind signals"));
+        Container.BindSignal<PlayerFinishedSequence>().ToMethod(() => Debug.Log("Test bind signals"));
     }
 }

@@ -7,7 +7,7 @@ public class PlayerInputHandler : ITickable
 {
     readonly UserInputState _inputState;
 
-    private Queue<InputDirection> _inputDirections = new Queue<InputDirection>();
+    private Queue<DirectionToMove> _inputDirections = new Queue<DirectionToMove>();
 
     public bool _HasNextinputDirections
     {
@@ -24,17 +24,17 @@ public class PlayerInputHandler : ITickable
         _inputState.IsMovingLeft = Input.GetKeyDown(KeyCode.A);
         _inputState.IsMovingRight = Input.GetKeyDown(KeyCode.D);
 
-        if(_inputState.IsMovingRight) _inputDirections.Enqueue(InputDirection.Right);
-        if(_inputState.IsMovingLeft) _inputDirections.Enqueue(InputDirection.Left);
+        if(_inputState.IsMovingRight) _inputDirections.Enqueue(DirectionToMove.Right);
+        if(_inputState.IsMovingLeft) _inputDirections.Enqueue(DirectionToMove.Left);
     }
 
-    public InputDirection GetNextDirection()
+    public DirectionToMove GetNextDirection()
     {
         return _inputDirections.Dequeue();
     }
 }
 
-public enum InputDirection
+public enum DirectionToMove
 {
     Left,
     Right

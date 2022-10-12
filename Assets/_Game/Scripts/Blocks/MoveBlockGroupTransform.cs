@@ -23,15 +23,15 @@ public class MoveBlockGroupTransform : MonoBehaviour
 
     private void MoveGroupTransform(PlayerMoved args)
     {
-        InputDirection asd = args.direction;
+        DirectionToMove directionToMove = args.direction;
 
-        if (asd == InputDirection.Right)
+        if (directionToMove == DirectionToMove.Right)
         {
             transform.DOMove(transform.position - Vector3.right, _settings.moveDuration).SetEase(Ease.Linear);
             return;
         }
 
-        if (asd == InputDirection.Left)
+        if (directionToMove == DirectionToMove.Left)
         {
             transform.DOMove(transform.position - Vector3.forward, _settings.moveDuration).SetEase(Ease.Linear);
         }

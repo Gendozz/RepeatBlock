@@ -1,10 +1,10 @@
-public struct PlayerMadeCorrectSequence { }
+public struct PlayerFinishedSequence { }
 
-public struct PlayerMadeInCorrectSequnce { }
+public struct PlayerMovedWrongWay { }
 
 public struct NewGenerationRequired { }
 
 public struct PlayerMoved 
 {
-    public InputDirection direction;
+    public DirectionToMove direction;
 }
