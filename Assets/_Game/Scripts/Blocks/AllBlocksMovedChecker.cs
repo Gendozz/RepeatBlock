@@ -23,14 +23,11 @@ public class AllBlocksMovedChecker : IInitializable
     }
 
     public void Initialize()
-    { _signalBus.Subscribe<BlocksGenerationCompleted>(SetCurrentBlockAmount);
+    {
+        _signalBus.Subscribe((BlocksGenerationCompleted args) => _blocksAmountToCheck = args.blocksGeneratedAmount);
         _signalBus.Subscribe<BlockMoved>(CheckBlocks);
     }
 
-    private void SetCurrentBlockAmount()
-    {
-        _blocksAmountToCheck = (int)_blocksPathGenerator.BlocksAmountInPath;
-    }
 
     private async void CheckBlocks()
     {
@@ -42,13 +39,11 @@ public class AllBlocksMovedChecker : IInitializable
             _signalBus.Fire<AllBlocksMoved>();
             _blocksMovedAmount = 0;
         }
-        
-        Debug.Log("BlockChecked");
     }
 
     [Serializable]
     public class Settings
     {
-        public float allBlocksOffset;
+        public int allBlocksOffset;
     }
 }

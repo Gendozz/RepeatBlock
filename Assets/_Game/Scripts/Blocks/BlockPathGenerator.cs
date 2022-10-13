@@ -10,9 +10,13 @@ public class BlockPathGenerator
     private readonly Settings _settings;
 
     private readonly SignalBus _signalBus;
-    
+
     private readonly Vector3 _firstBlockPosition;
-    
+
+    private DirectionToMove _directionFromTheFirstBlock;
+
+    private int _waypointsIndex;
+
     public float BlocksAmountInPath { get; private set; }
 
     public DirectionToMove[] Directions { get; private set; }
@@ -31,9 +35,9 @@ public class BlockPathGenerator
         SetPathSize();
         SetFirstWayPointAndDirection();
         FillPathWithPositions();
-        
-        _signalBus.Fire<BlocksGenerationCompleted>();
-        
+
+        _signalBus.Fire(new BlocksGenerationCompleted { blocksGeneratedAmount = (int)BlocksAmountInPath });
+
         return _waypointPositions;
     }
 
@@ -50,33 +54,32 @@ public class BlockPathGenerator
 
     private void SetFirstWayPointAndDirection()
     {
-        DirectionToMove directionFromTheFirstBlock = (DirectionToMove)Random.Range(0, 2);
+        _directionFromTheFirstBlock = (DirectionToMove)Random.Range(0, 2);
 
-        _waypointPositions[0] = GetPosition(_firstBlockPosition, directionFromTheFirstBlock);
-        Directions[0] = directionFromTheFirstBlock;
+        _waypointPositions[0] = GetPosition(_firstBlockPosition, _directionFromTheFirstBlock);
+        Directions[0] = _directionFromTheFirstBlock;
+        _waypointsIndex = 1;
     }
 
 
     private void FillPathWithPositions()
     {
-        int waypointsIndex = 1;                     // CHANGE THIS TO PREVENT MORE THAN RESSTICTED AMOUNT IN ONE DIRECTION
-
-        DirectionToMove directionToMove = (DirectionToMove)Random.Range(0, 2);
+        DirectionToMove directionToMove = _directionFromTheFirstBlock;
 
         Vector3 previousPosition = _waypointPositions[0];
 
-        while (waypointsIndex < (int)BlocksAmountInPath)
+        while (_waypointsIndex < (int)BlocksAmountInPath)
         {
-            int oneWayAmount = Random.Range(0, _settings.maxOneSideSequence);
+            int oneWayAmount = Random.Range(1, _settings.maxOneSideSequence);
 
             for (int i = 0; i < oneWayAmount; i++)
             {
-                _waypointPositions[waypointsIndex] = GetPosition(previousPosition, directionToMove);
-                previousPosition = _waypointPositions[waypointsIndex];
-                Directions[waypointsIndex] = directionToMove;
-                waypointsIndex++;
-                
-                if (waypointsIndex >= (int)BlocksAmountInPath)
+                _waypointPositions[_waypointsIndex] = GetPosition(previousPosition, directionToMove);
+                previousPosition = _waypointPositions[_waypointsIndex];
+                Directions[_waypointsIndex] = directionToMove;
+                _waypointsIndex++;
+
+                if (_waypointsIndex >= (int)BlocksAmountInPath)
                 {
                     break;
                 }

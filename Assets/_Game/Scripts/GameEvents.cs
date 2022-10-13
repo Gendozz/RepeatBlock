@@ -9,7 +9,10 @@ public struct PlayerMovedWrongWay { }
 
 public struct NewBlocksGenerationRequired { }
 
-public struct BlocksGenerationCompleted { }
+public struct BlocksGenerationCompleted
+{
+    public int blocksGeneratedAmount;
+}
 
 public struct BlockMoved { }
 
