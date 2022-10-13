@@ -12,7 +12,6 @@ public class BlockMoveUpDown
 
     public Settings _settings = null;
 
-
     public BlockMoveUpDown(Settings settings, BlockView view, SignalBus signalBus)
     {
         _settings = settings;
@@ -20,15 +19,10 @@ public class BlockMoveUpDown
         _signalBus = signalBus;
     }
 
-    public async void Move()
+    public void Move()
     {
-
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
-        //Debug.Log($"BlockMove was said to move {_view.gameObject.name} from {_view.gameObject.transform.position}");
-
         _view.transform
             .DOMoveY(_settings.yHeight, _settings.moveDuration).OnComplete(FireMoveCompleted);
-            //.From();
     }
 
     private void FireMoveCompleted()

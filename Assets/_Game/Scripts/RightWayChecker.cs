@@ -3,15 +3,15 @@ using Zenject;
 
 public class RightWayChecker : IInitializable
 {
-    private readonly BlocksSpawner _blocksSpawner;
+    private readonly BlockPathGenerator _blocksPathGenerator;
 
     private readonly SignalBus _signalBus;
 
-    private int _movesCounter = 0;
+    private int _movesCounter;
 
-    public RightWayChecker(BlocksSpawner blocksSpawner, SignalBus signalBus)
+    public RightWayChecker(BlockPathGenerator blocksPathGenerator, SignalBus signalBus)
     {
-        _blocksSpawner = blocksSpawner;
+        _blocksPathGenerator = blocksPathGenerator;
         _signalBus = signalBus;
     }
 
@@ -22,24 +22,27 @@ public class RightWayChecker : IInitializable
 
     private void CheckMove(PlayerMoved args)
     {
-        _movesCounter++;
         DirectionToMove currentMove = args.direction;
 
-        if (currentMove.Equals(_blocksSpawner.directionsSequence[_movesCounter]))
+        if (currentMove.Equals(_blocksPathGenerator.Directions[_movesCounter]))
         {
             //Debug.Log("Going right!");
 
-            if (_movesCounter == _blocksSpawner.directionsSequence.Length - 1)
+            if (_movesCounter == _blocksPathGenerator.Directions.Length - 1)
             {
                 _signalBus.Fire<PlayerFinishedSequence>();
-                Debug.Log("Finished reached");
                 _movesCounter = 0;
-            }
+                //Debug.Log($"Finished reached. _movesCounter set to {_movesCounter}");
+                return;
+            }            
+            _movesCounter++;
+
         }
         else
         {
-            Debug.Log("Going wrong!!!");
+            //Debug.Log($"Going wrong!!! CurrentMove is {currentMove}, need to be {_blocksPathGenerator.Directions[_movesCounter]}");
             _signalBus.Fire<PlayerMovedWrongWay>();
         }
+
     }
 }

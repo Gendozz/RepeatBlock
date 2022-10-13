@@ -34,8 +34,6 @@ public class PlayerMoveImitator : IInitializable, ITickable
     public void Initialize()
     {
         _signalBus.Subscribe<PlayerMovedWrongWay>(() => _toFinishActions = true);
-        //_signalBus.Subscribe<PlayerFinishedSequence>(() => _canMove = false);
-        //_signalBus.Subscribe<AllBlocksMoved>(() => _canMove = true);
     }
 
     public void Tick()

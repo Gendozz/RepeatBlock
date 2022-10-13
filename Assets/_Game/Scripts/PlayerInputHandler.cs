@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -16,11 +15,14 @@ public class PlayerInputHandler : ITickable
 
     public void Tick()
     {
-        _inputState.IsMovingLeft = Input.GetKeyDown(KeyCode.A);
-        _inputState.IsMovingRight = Input.GetKeyDown(KeyCode.D);
+        _inputState.IsMovingLeft = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
+        _inputState.IsMovingRight = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
 
         if(_inputState.IsMovingRight) _userInputQueue.EnqueueInput(DirectionToMove.Right);
-        if(_inputState.IsMovingLeft) _userInputQueue.EnqueueInput(DirectionToMove.Left);
+        if (_inputState.IsMovingLeft)
+        {
+            _userInputQueue.EnqueueInput(DirectionToMove.Left);
+        }
     }
 }
 

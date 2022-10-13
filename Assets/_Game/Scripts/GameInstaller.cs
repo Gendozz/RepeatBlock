@@ -9,11 +9,12 @@ public class GameInstaller : MonoInstaller
 
     // ReSharper disable Unity.PerformanceAnalysis
     public override void InstallBindings()
-    {
-        Container.BindInterfacesAndSelfTo<BlocksSpawner>().AsSingle();
+    {        
+        Container.BindInterfacesAndSelfTo<BlockPathGenerator>().AsSingle();
 
         Container.BindInterfacesTo<RightWayChecker>().AsSingle();
         Container.BindInterfacesTo<AllBlocksMovedChecker>().AsSingle();
+        Container.BindInterfacesAndSelfTo<BlocksSpawner>().AsSingle();
 
         Container.BindInterfacesTo<RestartGame>().AsSingle();
 

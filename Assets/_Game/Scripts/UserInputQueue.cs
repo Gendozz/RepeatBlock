@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using Zenject;
 
 public class UserInputQueue : IInitializable
@@ -27,6 +28,7 @@ public class UserInputQueue : IInitializable
         if (_shouldEnqueue)
         {
             _inputDirections.Enqueue(directionToMove);
+            Debug.Log("Input enqueued");
         }
     }
 

@@ -18,6 +18,6 @@ public class GameSignalsInstaller : Installer<GameSignalsInstaller>
         Container.DeclareSignal<AllBlocksMoved>();
 
 
-        //Container.BindSignal<PlayerFinishedSequence>().ToMethod(() => Debug.Log("Test bind signals"));
+        //Container.BindSignal<BlocksGenerationCompleted>().ToMethod(() => Debug.Log("Test bind signals"));
     }
 }

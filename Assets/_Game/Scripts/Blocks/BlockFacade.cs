@@ -38,7 +38,7 @@ public class BlockFacade : MonoBehaviour, IPoolable<IMemoryPool>, IDisposable
     public void OnSpawned(IMemoryPool pool)
     {
         _pool = pool;
-        //Debug.Log($"BlockFacade {gameObject.name} spawned in {transform.position}");
+        //Debug.Log($"BlockFacade {gameObject.GetHashCode()} spawned in {transform.position}");
         _blockMove.Move();
     }
 

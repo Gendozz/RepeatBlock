@@ -12,31 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eb2d3d18186d174ca0440978b624063, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  BlocksSpawner:
-    NumBlocksStartAmount: 10
-    NumBlocksIncreaseRate: 0.5
-    maxSequence: 10
-    maxOneSideSequence: 4
-    DelayBetweenNextSpawnInCurrentWave: 0.2
-    DelayBeforeStartNextSpawnWave: 1.1
-    yHeightCreatePosition: -15
   GameInstaller:
     BlockFacadePrefab: {fileID: 1818200915671438740, guid: 3abc9ea30b4d68c45b53da321b899cd0, type: 3}
-    PoolInitialSize: 20
+    PoolInitialSize: 25
+  BlocksSpawner:
+    DelayBetweenNextSpawnInCurrentWave: 0.1
+    DelayBeforeStartNextSpawnWave: 0.5
+  BlockPathGenerator:
+    numBlocksStartAmount: 7
+    numBlocksIncreaseRate: 0.2
+    maxSequence: 10
+    yHeightCreatePosition: -15
+    maxOneSideSequence: 3
   Block:
     BlockTunables:
       _color: {r: 0, g: 0, b: 0, a: 0}
-    BlockMove:
+    BlockMoveUpDown:
       yHeight: -5.5
-      moveDuration: 1
-    MoveBlockGroup:
-      moveDuration: 0.5
+      moveDuration: 0.2
+    BlockMoveOnPlayerMove:
+      moveDuration: 0.2
     BlockOutOfViewChecker:
       xOrZCoordToDispose: -5
+  AllBlocksMovedChecker:
+    allBlocksOffset: 0
   Player:
     PlayerMoveImitator:
       yMoveHeight: 0.2
-      moveDuration: 0.5
-      loseFallingDuration: 3
+      moveDuration: 0.2
+      loseFallingDuration: 2
   RestartGame:
-    delayBeforeRestart: 3
+    delayBeforeRestart: 1
