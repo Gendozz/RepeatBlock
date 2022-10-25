@@ -43,3 +43,7 @@ MonoBehaviour:
       loseFallingDuration: 2
   RestartGame:
     delayBeforeRestart: 1
+  Opponent:
+    PathRepeater:
+      oneMoveDuration: 0.3
+      yHeight: 0

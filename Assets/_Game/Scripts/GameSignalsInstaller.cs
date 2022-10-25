@@ -7,12 +7,12 @@ public class GameSignalsInstaller : Installer<GameSignalsInstaller>
     {
         SignalBusInstaller.Install(Container);
 
-        Container.DeclareSignal<PlayerFinishedSequence>();
+        Container.DeclareSignal<PlayerFinishedPath>();
         Container.DeclareSignal<PlayerMoved>();
         Container.DeclareSignal<PlayerMovedWrongWay>();
 
-        Container.DeclareSignal<NewBlocksGenerationRequired>();
-        Container.DeclareSignal<BlocksGenerationCompleted>();
+        Container.DeclareSignal<NewPathRequired>();
+        Container.DeclareSignal<PathGenerationCompleted>();
 
         Container.DeclareSignal<BlockMoved>();
         Container.DeclareSignal<AllBlocksMoved>();

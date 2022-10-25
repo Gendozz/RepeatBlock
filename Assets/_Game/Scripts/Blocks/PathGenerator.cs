@@ -3,10 +3,8 @@ using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
-public class BlockPathGenerator
+public class PathGenerator
 {
-    private Vector3[] _waypointPositions;
-
     private readonly Settings _settings;
 
     private readonly SignalBus _signalBus;
@@ -18,11 +16,13 @@ public class BlockPathGenerator
     private int _waypointsIndex;
 
     public float BlocksAmountInPath { get; private set; }
+    
+    public Vector3[] WaypointPositions { get; private set; }
 
     public DirectionToMove[] Directions { get; private set; }
 
 
-    public BlockPathGenerator(Settings settings, SignalBus signalBus)
+    public PathGenerator(Settings settings, SignalBus signalBus)
     {
         _settings = settings;
         _signalBus = signalBus;
@@ -36,9 +36,9 @@ public class BlockPathGenerator
         SetFirstWayPointAndDirection();
         FillPathWithPositions();
 
-        _signalBus.Fire(new BlocksGenerationCompleted { blocksGeneratedAmount = (int)BlocksAmountInPath });
+        _signalBus.Fire(new PathGenerationCompleted { WaypointsAmount = (int)BlocksAmountInPath });
 
-        return _waypointPositions;
+        return WaypointPositions;
     }
 
     private void SetPathSize()
@@ -48,7 +48,7 @@ public class BlockPathGenerator
             BlocksAmountInPath += _settings.numBlocksIncreaseRate;
         }
 
-        _waypointPositions = new Vector3[(int)BlocksAmountInPath];
+        WaypointPositions = new Vector3[(int)BlocksAmountInPath];
         Directions = new DirectionToMove[(int)BlocksAmountInPath];
     }
 
@@ -56,7 +56,7 @@ public class BlockPathGenerator
     {
         _directionFromTheFirstBlock = (DirectionToMove)Random.Range(0, 2);
 
-        _waypointPositions[0] = GetPosition(_firstBlockPosition, _directionFromTheFirstBlock);
+        WaypointPositions[0] = GetPosition(_firstBlockPosition, _directionFromTheFirstBlock);
         Directions[0] = _directionFromTheFirstBlock;
         _waypointsIndex = 1;
     }
@@ -66,7 +66,7 @@ public class BlockPathGenerator
     {
         DirectionToMove directionToMove = _directionFromTheFirstBlock;
 
-        Vector3 previousPosition = _waypointPositions[0];
+        Vector3 previousPosition = WaypointPositions[0];
 
         while (_waypointsIndex < (int)BlocksAmountInPath)
         {
@@ -74,8 +74,8 @@ public class BlockPathGenerator
 
             for (int i = 0; i < oneWayAmount; i++)
             {
-                _waypointPositions[_waypointsIndex] = GetPosition(previousPosition, directionToMove);
-                previousPosition = _waypointPositions[_waypointsIndex];
+                WaypointPositions[_waypointsIndex] = GetPosition(previousPosition, directionToMove);
+                previousPosition = WaypointPositions[_waypointsIndex];
                 Directions[_waypointsIndex] = directionToMove;
                 _waypointsIndex++;
 

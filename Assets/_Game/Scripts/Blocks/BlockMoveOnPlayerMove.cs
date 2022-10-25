@@ -24,7 +24,7 @@ public class BlockMoveOnPlayerMove : IInitializable
 
     private void MoveBlockView(PlayerMoved args)
     {
-        DirectionToMove directionToMove = args.direction;
+        DirectionToMove directionToMove = args.Direction;
 
         if (directionToMove == DirectionToMove.Right)
         {

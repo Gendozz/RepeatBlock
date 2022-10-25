@@ -1,21 +1,19 @@
-public struct PlayerFinishedSequence { }
+public struct NewPathRequired { }
 
-public struct PlayerMoved
+public struct PathGenerationCompleted
 {
-    public DirectionToMove direction;
-}
-
-public struct PlayerMovedWrongWay { }
-
-public struct NewBlocksGenerationRequired { }
-
-public struct BlocksGenerationCompleted
-{
-    public int blocksGeneratedAmount;
+    public int WaypointsAmount;
 }
 
 public struct BlockMoved { }
 
 public struct AllBlocksMoved { }
 
+public struct PlayerMoved
+{
+    public DirectionToMove Direction;
+}
 
+public struct PlayerFinishedPath { }
+
+public struct PlayerMovedWrongWay { }

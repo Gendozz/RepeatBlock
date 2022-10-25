@@ -7,10 +7,10 @@ public class PlayerInstaller : MonoInstaller
     {
         Container.Bind<UserInputState>().AsSingle();
 
-        Container.BindInterfacesAndSelfTo<PlayerInputHandler>().AsSingle();
+        Container.BindInterfacesAndSelfTo<UserInputHandler>().AsSingle();
 
         Container.BindInterfacesAndSelfTo<UserInputQueue>().AsSingle();
 
-        Container.BindInterfacesTo<PlayerMoveImitator>().AsSingle();
+        Container.BindInterfacesTo<MoveImitator>().AsSingle();
     }
 }

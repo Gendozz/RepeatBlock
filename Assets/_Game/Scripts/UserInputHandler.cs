@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-public class PlayerInputHandler : IInitializable, ITickable
+public class UserInputHandler : IInitializable, ITickable
 {
     private readonly UserInputState _inputState;
 
@@ -13,7 +13,7 @@ public class PlayerInputHandler : IInitializable, ITickable
 
     private int _currentInputLimit;
 
-    public PlayerInputHandler(UserInputState inputState, UserInputQueue userInputQueue, SignalBus signalBus)
+    public UserInputHandler(UserInputState inputState, UserInputQueue userInputQueue, SignalBus signalBus)
     {
         _inputState = inputState;
         _userInputQueue = userInputQueue;
@@ -22,9 +22,9 @@ public class PlayerInputHandler : IInitializable, ITickable
 
     public void Initialize()
     {
-        _signalBus.Subscribe<PlayerFinishedSequence>(() => _shouldDetectInput = false);
+        _signalBus.Subscribe<PlayerFinishedPath>(() => _shouldDetectInput = false);
         _signalBus.Subscribe<AllBlocksMoved>(() => _shouldDetectInput = true);
-        _signalBus.Subscribe((BlocksGenerationCompleted args) => _currentInputLimit = args.blocksGeneratedAmount);
+        _signalBus.Subscribe((PathGenerationCompleted args) => _currentInputLimit = args.WaypointsAmount); // MISTAKE IF CHANGE RIGHTWAY CHECKER
     }
 
     public void Tick()

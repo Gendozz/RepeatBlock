@@ -3,7 +3,7 @@ using DG.Tweening;
 using Zenject;
 using System;
 
-public class PlayerMoveImitator : IInitializable, ITickable
+public class MoveImitator : IInitializable, ITickable
 {
     private readonly PlayerView _playerView;
 
@@ -19,7 +19,7 @@ public class PlayerMoveImitator : IInitializable, ITickable
 
     public Settings _settings = null;
 
-    public PlayerMoveImitator(
+    public MoveImitator(
         PlayerView playerView,
         Settings settings,
         SignalBus signalBus,
@@ -54,7 +54,7 @@ public class PlayerMoveImitator : IInitializable, ITickable
     {
         DirectionToMove inputDirection = _userInputQueue.GetNextDirection();
 
-        _signalBus.Fire(new PlayerMoved { direction = inputDirection });
+        _signalBus.Fire(new PlayerMoved { Direction = inputDirection });
 
 
         switch (inputDirection)
@@ -64,8 +64,6 @@ public class PlayerMoveImitator : IInitializable, ITickable
                 break;
             case DirectionToMove.Right:
                 ImitateMoving(new Vector3(0, 0, -90f));
-                break;
-            default:
                 break;
         }
     }

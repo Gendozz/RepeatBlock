@@ -3,15 +3,15 @@ using Zenject;
 
 public class RightWayChecker : IInitializable
 {
-    private readonly BlockPathGenerator _blocksPathGenerator;
+    private readonly PathGenerator _pathGenerator;
 
     private readonly SignalBus _signalBus;
 
     private int _movesCounter;
 
-    public RightWayChecker(BlockPathGenerator blocksPathGenerator, SignalBus signalBus)
+    public RightWayChecker(PathGenerator pathGenerator, SignalBus signalBus)
     {
-        _blocksPathGenerator = blocksPathGenerator;
+        _pathGenerator = pathGenerator;
         _signalBus = signalBus;
     }
 
@@ -22,15 +22,15 @@ public class RightWayChecker : IInitializable
 
     private void CheckMove(PlayerMoved args)
     {
-        DirectionToMove currentMove = args.direction;
+        DirectionToMove currentMove = args.Direction;
 
-        if (currentMove.Equals(_blocksPathGenerator.Directions[_movesCounter]))
+        if (currentMove.Equals(_pathGenerator.Directions[_movesCounter]))
         {
             //Debug.Log("Going right!");
 
-            if (_movesCounter == _blocksPathGenerator.Directions.Length - 1)
+            if (_movesCounter == _pathGenerator.Directions.Length - 1)
             {
-                _signalBus.Fire<PlayerFinishedSequence>();
+                _signalBus.Fire<PlayerFinishedPath>();
                 _movesCounter = 0;
                 //Debug.Log($"Finished reached. _movesCounter set to {_movesCounter}");
                 return;

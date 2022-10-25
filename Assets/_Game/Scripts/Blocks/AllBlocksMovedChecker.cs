@@ -7,7 +7,7 @@ public class AllBlocksMovedChecker : IInitializable
 {
     private readonly SignalBus _signalBus;
 
-    private readonly BlockPathGenerator _blocksPathGenerator;
+    private readonly PathGenerator _pathGenerator;
 
     private int _blocksAmountToCheck;
 
@@ -15,16 +15,16 @@ public class AllBlocksMovedChecker : IInitializable
 
     public Settings _settings;
 
-    public AllBlocksMovedChecker(SignalBus signalBus, BlockPathGenerator blocksPathGenerator, Settings settings)
+    public AllBlocksMovedChecker(SignalBus signalBus, PathGenerator pathGenerator, Settings settings)
     {
         _signalBus = signalBus;
-        _blocksPathGenerator = blocksPathGenerator;
+        _pathGenerator = pathGenerator;
         _settings = settings;
     }
 
     public void Initialize()
     {
-        _signalBus.Subscribe((BlocksGenerationCompleted args) => _blocksAmountToCheck = args.blocksGeneratedAmount);
+        _signalBus.Subscribe((PathGenerationCompleted args) => _blocksAmountToCheck = args.WaypointsAmount);
         _signalBus.Subscribe<BlockMoved>(CheckBlocks);
     }
 

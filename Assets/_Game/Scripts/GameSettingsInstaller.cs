@@ -9,7 +9,7 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
     public GameInstaller.Settings GameInstaller;
     [Space]
     public BlocksSpawner.Settings BlocksSpawner;
-    public BlockPathGenerator.Settings BlockPathGenerator;
+    public PathGenerator.Settings BlockPathGenerator;
     public BlockSettings Block;
     public AllBlocksMovedChecker.Settings AllBlocksMovedChecker;
     
@@ -17,6 +17,9 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
     public PlayerSettings Player;
     [Space]
     public RestartGame.Settings RestartGame;
+
+    [Space] 
+    public OpponentSettings Opponent;
 
 
     [Serializable]
@@ -31,7 +34,13 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
     [Serializable]
     public class PlayerSettings
     {
-        public PlayerMoveImitator.Settings PlayerMoveImitator;
+        public MoveImitator.Settings PlayerMoveImitator;
+    }
+    
+    [Serializable]
+    public class OpponentSettings
+    {
+        public PathRepeater.Settings PathRepeater;
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
@@ -48,6 +57,8 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
         
 
         Container.BindInstance(Player.PlayerMoveImitator).IfNotBound();
+        
+        Container.BindInstance(Opponent.PathRepeater).IfNotBound();
 
         Container.BindInstance(RestartGame).IfNotBound();
     }
