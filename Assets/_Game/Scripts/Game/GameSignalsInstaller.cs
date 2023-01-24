@@ -1,4 +1,3 @@
-using UnityEngine;
 using Zenject;
 
 public class GameSignalsInstaller : Installer<GameSignalsInstaller>
@@ -9,15 +8,12 @@ public class GameSignalsInstaller : Installer<GameSignalsInstaller>
 
         Container.DeclareSignal<PlayerFinishedPath>();
         Container.DeclareSignal<PlayerMoved>();
-        Container.DeclareSignal<PlayerMovedWrongWay>();
+        Container.DeclareSignal<PlayerDied>();
 
-        Container.DeclareSignal<NewPathRequired>();
         Container.DeclareSignal<PathGenerationCompleted>();
 
-        Container.DeclareSignal<BlockMoved>();
-        Container.DeclareSignal<AllBlocksMoved>();
+        Container.DeclareSignal<OppenentFinishedPath>();
 
-
-        //Container.BindSignal<BlocksGenerationCompleted>().ToMethod(() => Debug.Log("Test bind signals"));
+        Container.DeclareSignal<InitialActionsDone>();
     }
 }

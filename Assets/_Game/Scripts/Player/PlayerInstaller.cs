@@ -2,7 +2,6 @@ using Zenject;
 
 public class PlayerInstaller : MonoInstaller
 {
-    // ReSharper disable Unity.PerformanceAnalysis
     public override void InstallBindings()
     {
         Container.Bind<UserInputState>().AsSingle();
@@ -11,6 +10,10 @@ public class PlayerInstaller : MonoInstaller
 
         Container.BindInterfacesAndSelfTo<UserInputQueue>().AsSingle();
 
-        Container.BindInterfacesTo<MoveImitator>().AsSingle();
+        Container.Bind<RotateInDirection>().AsSingle();
+
+        Container.Bind<PlayerDeathHandler>().AsSingle();
+
+        Container.Bind<PlayerMoveHandler>().AsSingle();
     }
 }

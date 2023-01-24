@@ -24,19 +24,40 @@ public class BlocksSpawner : IInitializable
 
     public void Initialize()
     {
-        _signalBus.Subscribe<PlayerFinishedPath>(SpawnBlockSequence);
-        SpawnBlock(new Vector3(0, -15, 0));                     // bring to settings
-        SpawnBlockSequence();
+        _signalBus.Subscribe<PlayerFinishedPath>(SpawnNewBlockPath);
+        //SpawnInitialBlocks();
+        //SpawnBlock(_settings.InitialBlockPosition);                   // Was in start of development/ Now it's starts after tutorial
+        //SpawnNewBlockPath();
+        //SpawnTutorialPath();
     }
 
-    private async void SpawnBlockSequence()
+    public Transform SpawnInitialPlayerBlock(Vector3 playerBlockPosition)
+    {
+        return SpawnInitialBlock(playerBlockPosition);
+        
+    }
+    
+    public Transform SpawnInitialOpponentBlock(Vector3 opponentPosition)
+    {        
+        return SpawnInitialBlock(opponentPosition);
+    }
+
+    public void SpawnInitialPath()
+    {
+        Vector3[] positionsToSpawn = _pathGenerator.GenerateInitialPath();
+
+        for (int i = 0; i < positionsToSpawn.Length - 1; i++)
+        {
+            SpawnBlock(positionsToSpawn[i]);
+        }
+    }
+
+    private async void SpawnNewBlockPath()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(_settings.DelayBeforeStartNextSpawnWave));
 
         Vector3[] positionsToSpawn = _pathGenerator.GenerateNewPath();
-        
-        //Debug.Log($"BlockSpawner will spawn {positionsToSpawn.Length} blocks");
-        
+                
         foreach (var blockPosition in positionsToSpawn)
         {
             SpawnBlock(blockPosition);
@@ -47,10 +68,14 @@ public class BlocksSpawner : IInitializable
     private void SpawnBlock(Vector3 position)
     {
         var blockFacade = _blockFactory.Create();
-        //Debug.Log($"BlockSpawner: spawned block {blockFacade.gameObject.GetHashCode()} in position {blockFacade.Position} and will chang it's position to {position}");
-
         blockFacade.Position = position;
+    }
 
+    private Transform SpawnInitialBlock(Vector3 position)
+    {
+        var blockFacade = _blockFactory.Create();
+        blockFacade.Position = position;
+        return blockFacade.transform;
     }
 
     [Serializable]
@@ -58,5 +83,6 @@ public class BlocksSpawner : IInitializable
     {
         public float DelayBetweenNextSpawnInCurrentWave;
         public float DelayBeforeStartNextSpawnWave;
+        public Vector3 InitialBlockPosition;
     }
 }

@@ -18,8 +18,9 @@ MonoBehaviour:
   BlocksSpawner:
     DelayBetweenNextSpawnInCurrentWave: 0.1
     DelayBeforeStartNextSpawnWave: 0.5
+    InitialBlockPosition: {x: 0, y: -15, z: 0}
   BlockPathGenerator:
-    numBlocksStartAmount: 7
+    numBlocksStartAmount: 6
     numBlocksIncreaseRate: 0.2
     maxSequence: 10
     yHeightCreatePosition: -15
@@ -30,20 +31,26 @@ MonoBehaviour:
     BlockMoveUpDown:
       yHeight: -5.5
       moveDuration: 0.2
-    BlockMoveOnPlayerMove:
-      moveDuration: 0.2
+    MoveTransformOnPlayerMove:
+      moveDuration: 0.4
     BlockOutOfViewChecker:
       xOrZCoordToDispose: -5
   AllBlocksMovedChecker:
     allBlocksOffset: 0
   Player:
-    PlayerMoveImitator:
-      yMoveHeight: 0.2
-      moveDuration: 0.2
+    Death:
       loseFallingDuration: 2
-  RestartGame:
-    delayBeforeRestart: 1
+      fallToYPosition: 0
   Opponent:
     PathRepeater:
-      oneMoveDuration: 0.3
-      yHeight: 0
+      oneMoveDuration: 0.4
+      yHeight: 0.2
+  RotateInDirection:
+    yMoveHeight: 0.2
+    moveDuration: 0.4
+  InitialActions:
+    PlayerStartPosition: {x: 0, y: 0, z: 0}
+    PlayerBlockStartPosition: {x: 0, y: 0, z: 0}
+    MoveToPositionsDuration: 1
+  RestartGame:
+    delayBeforeRestart: 1

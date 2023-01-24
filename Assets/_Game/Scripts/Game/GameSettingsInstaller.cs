@@ -1,25 +1,38 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 [CreateAssetMenu(menuName = "RepeatBlock/Game Settings")]
 public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInstaller>
 {
     public GameInstaller.Settings GameInstaller;
-    [Space]
+
+    [Space(10)]
     public BlocksSpawner.Settings BlocksSpawner;
+
+    [Space(10)]
     public PathGenerator.Settings BlockPathGenerator;
+
+    [Space(10)]
     public BlockSettings Block;
+
+    [Space(10)]
     public AllBlocksMovedChecker.Settings AllBlocksMovedChecker;
     
-    [Space]
+    [Space(10)]
     public PlayerSettings Player;
-    [Space]
-    public RestartGame.Settings RestartGame;
 
-    [Space] 
+    [Space(10)]
     public OpponentSettings Opponent;
+
+    [Space(10)]
+    public RotateInDirection.Settings RotateInDirection;
+
+    [Space(10)]
+    public InitialActions.Settings InitialActions;
+
+    [Space(10)]
+    public RestartGame.Settings RestartGame;
 
 
     [Serializable]
@@ -27,23 +40,22 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
     {
         public BlockTunables BlockTunables;
         public BlockMoveUpDown.Settings BlockMoveUpDown;
-        public BlockMoveOnPlayerMove.Settings BlockMoveOnPlayerMove;
+        public MoveTransformOnPlayerMove.Settings MoveTransformOnPlayerMove;
         public BlockOutOfViewChecker.Settings BlockOutOfViewChecker;
     }
 
     [Serializable]
     public class PlayerSettings
     {
-        public MoveImitator.Settings PlayerMoveImitator;
+        public PlayerDeathHandler.Settings Death;
     }
     
     [Serializable]
     public class OpponentSettings
     {
-        public PathRepeater.Settings PathRepeater;
+        public OppenentMoveHandler.Settings PathRepeater;
     }
 
-    // ReSharper disable Unity.PerformanceAnalysis
     public override void InstallBindings()
     {
         Container.BindInstance(GameInstaller).IfNotBound();
@@ -51,21 +63,25 @@ public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInsta
         Container.BindInstance(BlocksSpawner).IfNotBound();
         Container.BindInstance(BlockPathGenerator).IfNotBound();
         Container.BindInstance(Block.BlockMoveUpDown).IfNotBound();
-        Container.BindInstance(Block.BlockMoveOnPlayerMove).IfNotBound();
+        Container.BindInstance(Block.MoveTransformOnPlayerMove).IfNotBound();
         Container.BindInstance(Block.BlockOutOfViewChecker).IfNotBound();
         Container.BindInstance(AllBlocksMovedChecker).IfNotBound();
         
 
-        Container.BindInstance(Player.PlayerMoveImitator).IfNotBound();
+        Container.BindInstance(RotateInDirection).IfNotBound();
+        Container.BindInstance(Player.Death).IfNotBound();
         
         Container.BindInstance(Opponent.PathRepeater).IfNotBound();
+
+        Container.BindInstance(InitialActions).IfNotBound();
 
         Container.BindInstance(RestartGame).IfNotBound();
     }
 
     private void OnValidate()
     {
-        Block.BlockMoveOnPlayerMove.moveDuration = Player.PlayerMoveImitator.moveDuration;
+        Block.MoveTransformOnPlayerMove.moveDuration = RotateInDirection.moveDuration;
+        Opponent.PathRepeater.oneMoveDuration = RotateInDirection.moveDuration;
 
     }
 }

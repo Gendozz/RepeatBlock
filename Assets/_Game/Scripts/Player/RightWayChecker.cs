@@ -1,7 +1,6 @@
-using UnityEngine;
 using Zenject;
 
-public class RightWayChecker : IInitializable
+public class RightWayChecker
 {
     private readonly PathGenerator _pathGenerator;
 
@@ -15,16 +14,9 @@ public class RightWayChecker : IInitializable
         _signalBus = signalBus;
     }
 
-    public void Initialize()
+    public bool CheckMove(DirectionToMove currentDirection)
     {
-        _signalBus.Subscribe<PlayerMoved>(CheckMove);
-    }
-
-    private void CheckMove(PlayerMoved args)
-    {
-        DirectionToMove currentMove = args.Direction;
-
-        if (currentMove.Equals(_pathGenerator.Directions[_movesCounter]))
+        if (currentDirection.Equals(_pathGenerator.Directions[_movesCounter]))
         {
             //Debug.Log("Going right!");
 
@@ -33,15 +25,17 @@ public class RightWayChecker : IInitializable
                 _signalBus.Fire<PlayerFinishedPath>();
                 _movesCounter = 0;
                 //Debug.Log($"Finished reached. _movesCounter set to {_movesCounter}");
-                return;
-            }            
+                return true;
+            }
             _movesCounter++;
+
+            return true;
 
         }
         else
         {
             //Debug.Log($"Going wrong!!! CurrentMove is {currentMove}, need to be {_blocksPathGenerator.Directions[_movesCounter]}");
-            _signalBus.Fire<PlayerMovedWrongWay>();
+            return false;
         }
 
     }

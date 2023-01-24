@@ -1,22 +1,22 @@
 using DG.Tweening;
 using System;
-using Cysharp.Threading.Tasks;
-using UnityEngine;
-using Zenject;
 
 public class BlockMoveUpDown
 {
     private readonly BlockView _view;
-
-    private readonly SignalBus _signalBus;
+    
+    private readonly AllBlocksMovedChecker _allBlocksMovedChecker;
 
     public Settings _settings = null;
 
-    public BlockMoveUpDown(Settings settings, BlockView view, SignalBus signalBus)
+    public BlockMoveUpDown(
+        Settings settings, 
+        BlockView view,
+        AllBlocksMovedChecker allBlocksMovedChecker)
     {
         _settings = settings;
         _view = view;
-        _signalBus = signalBus;
+        _allBlocksMovedChecker = allBlocksMovedChecker;
     }
 
     public void Move()
@@ -27,7 +27,7 @@ public class BlockMoveUpDown
 
     private void FireMoveCompleted()
     {
-        _signalBus.Fire<BlockMoved>();
+        _allBlocksMovedChecker.AddBlockAsChecked();
     }
 
 

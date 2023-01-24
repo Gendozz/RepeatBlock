@@ -3,7 +3,7 @@ using System;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-public class RestartGame : IInitializable, IDisposable
+public class RestartGame : IInitializable
 {
     private readonly SignalBus _signalBus;
 
@@ -17,12 +17,7 @@ public class RestartGame : IInitializable, IDisposable
 
     public void Initialize()
     {
-        _signalBus.Subscribe<PlayerMovedWrongWay>(RestartScene);
-    }
-    
-    public void Dispose()
-    {
-        _signalBus.Unsubscribe<PlayerMovedWrongWay>(RestartScene);
+        _signalBus.Subscribe<PlayerDied>(RestartScene);
     }
 
     private async void RestartScene()

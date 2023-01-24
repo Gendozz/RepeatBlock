@@ -30,14 +30,23 @@ public class PathGenerator
         _firstBlockPosition = new Vector3(0, _settings.yHeightCreatePosition, 0);
     }
 
+    public Vector3[] GenerateInitialPath()
+    {
+        SetPathSize();
+        SetFirstWayPointAndDirection();
+        FillPathWithPositions();
+        return WaypointPositions;
+    }
+
     public Vector3[] GenerateNewPath()
     {
         SetPathSize();
         SetFirstWayPointAndDirection();
         FillPathWithPositions();
+        Debug.Log("Path generated! Block amount is " + (int)BlocksAmountInPath);
 
         _signalBus.Fire(new PathGenerationCompleted { WaypointsAmount = (int)BlocksAmountInPath });
-
+        
         return WaypointPositions;
     }
 

@@ -1,13 +1,11 @@
-public struct NewPathRequired { }
-
 public struct PathGenerationCompleted
 {
     public int WaypointsAmount;
 }
 
-public struct BlockMoved { }
+public struct InitialActionsDone { }
 
-public struct AllBlocksMoved { }
+public struct OppenentFinishedPath { }
 
 public struct PlayerMoved
 {
@@ -16,4 +14,4 @@ public struct PlayerMoved
 
 public struct PlayerFinishedPath { }
 
-public struct PlayerMovedWrongWay { }
+public struct PlayerDied { }

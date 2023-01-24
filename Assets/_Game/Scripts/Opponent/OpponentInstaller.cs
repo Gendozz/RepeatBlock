@@ -2,9 +2,10 @@ using Zenject;
 
 public class OpponentInstaller : MonoInstaller
 {
-    // ReSharper disable Unity.PerformanceAnalysis
     public override void InstallBindings()
     {
-        Container.BindInterfacesTo<PathRepeater>().AsSingle();
+        Container.BindInterfacesTo<OppenentMoveHandler>().AsSingle();
+        Container.BindInterfacesTo<MoveTransformOnPlayerMove>().AsSingle();
+        Container.Bind<RotateInDirection>().AsSingle();
     }
 }

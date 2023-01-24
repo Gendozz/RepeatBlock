@@ -3,19 +3,19 @@ using Zenject;
 using DG.Tweening;
 using System;
 
-public class BlockMoveOnPlayerMove : IInitializable
+public class MoveTransformOnPlayerMove : IInitializable
 {
     private readonly SignalBus _signalBus;
 
-    private readonly BlockView _blockView;
+    private readonly IView _view;
 
     private Settings _settings;
 
-    public BlockMoveOnPlayerMove(SignalBus signalBus, Settings settings, BlockView blockView)
+    public MoveTransformOnPlayerMove(SignalBus signalBus, Settings settings, IView view)
     {
         _signalBus = signalBus;
         _settings = settings;
-        _blockView = blockView;
+        _view = view;
     }
     public void Initialize()
     {
@@ -28,13 +28,13 @@ public class BlockMoveOnPlayerMove : IInitializable
 
         if (directionToMove == DirectionToMove.Right)
         {
-            _blockView.transform.DOMove(_blockView.transform.position - Vector3.right, _settings.moveDuration).SetEase(Ease.Linear);
+            _view.GetTransform.DOMove(_view.GetTransform.position - Vector3.right, _settings.moveDuration).SetEase(Ease.Linear);
             return;
         }
 
         if (directionToMove == DirectionToMove.Left)
         {
-            _blockView.transform.DOMove(_blockView.transform.position - Vector3.forward, _settings.moveDuration).SetEase(Ease.Linear);
+            _view.GetTransform.DOMove(_view.GetTransform.position - Vector3.forward, _settings.moveDuration).SetEase(Ease.Linear);
         }
     }
 
