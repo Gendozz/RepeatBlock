@@ -1,13 +1,14 @@
 using UnityEngine;
 using DG.Tweening;
 using System;
-using Zenject;
 
-public class InitialActions : IInitializable
+public class InitialActions
 {
     private readonly Settings _settings;
 
-    private readonly PathGenerator _pathGenerator;
+    private DirectionsProvider _directionsProvider;
+
+    private PositionsProvider _positionsProvider;
 
     private readonly BlocksSpawner _blocksSpawner;
 
@@ -15,7 +16,7 @@ public class InitialActions : IInitializable
 
     private readonly OpponentView _opponentView;
 
-    private readonly SignalBus _signalBus;
+    private GameStateMachine _gameStateMachine;
 
     private Transform _playerStartBlockTransfrom;
 
@@ -23,43 +24,58 @@ public class InitialActions : IInitializable
 
     private Vector3 _opponentStartPosition;
 
+    private BlockFacade _enemyInitiaBlock;
+
+    private BlocksRegistry _blocksRegistry;
+
     public InitialActions(
         Settings settings,
-        PathGenerator pathGenerator,
+        DirectionsProvider directionsProvider,
+        PositionsProvider positionsProvider,
         BlocksSpawner blocksSpawner,
         PlayerView playerView,
         OpponentView opponentView,
-        SignalBus signalBus)
+        GameStateMachine gameStateMachine,
+        BlocksRegistry blocksRegistry
+        )
     {
         _settings = settings;
-        _pathGenerator = pathGenerator;
+        _directionsProvider = directionsProvider;
+        _positionsProvider = positionsProvider;
         _blocksSpawner = blocksSpawner;
         _playerView = playerView;
         _opponentView = opponentView;
-        _signalBus = signalBus;
+        _gameStateMachine = gameStateMachine;
+        _blocksRegistry = blocksRegistry;
     }
 
     public void Initialize()
     {
-        _playerStartBlockTransfrom = _blocksSpawner.SpawnInitialPlayerBlock(
-            new Vector3(_playerView.transform.position.x, -15, _playerView.transform.position.z));
+        _playerStartBlockTransfrom = _blocksSpawner.SpawnBlock(_playerView.transform.position, false);
+        _opponentStartBlockTransfrom = _blocksSpawner.SpawnBlock(_opponentView.transform.position, false);
 
-        _opponentStartBlockTransfrom = _blocksSpawner.SpawnInitialOpponentBlock(
-            new Vector3(_opponentView.transform.position.x, -15, _opponentView.transform.position.z)); // TODO: Make not hardcoded
+        _enemyInitiaBlock = _blocksRegistry.PullOutLastBlock();
     }
 
     public void DoInitialActions()
     {
-        Debug.Log("Initial actions started");
-        _blocksSpawner.SpawnInitialPath();
-        SetOpponentStartPosition();
-        MoveChractersToStartPositions();
-    }
+        Direction direction;
+        Vector3 position = Vector3.zero;
 
-    private void SetOpponentStartPosition()
-    {
-        Vector3 lastPointPosition = _pathGenerator.WaypointPositions[_pathGenerator.WaypointPositions.Length - 1];
-        _opponentStartPosition = new Vector3(lastPointPosition.x, _settings.PlayerStartPosition.y, lastPointPosition.z);
+        for (int i = 0; i < _settings.initialTrapAmount; i++)                 
+        {
+            direction = _directionsProvider.GetNewDirection();
+            position = _positionsProvider.GetNewPosition(direction);
+            if (i != _settings.initialTrapAmount - 1)
+            {
+                _blocksSpawner.SpawnBlock(position, false); 
+            }
+        }
+
+        _blocksRegistry.AddBlock(_enemyInitiaBlock);
+
+        _opponentStartPosition = position;
+        MoveChractersToStartPositions();
     }
 
     public void MoveChractersToStartPositions()
@@ -70,7 +86,7 @@ public class InitialActions : IInitializable
         float opponentStartPositionX = _opponentStartPosition.x;
         float opponentStartPositionZ = _opponentStartPosition.z;
 
-
+        // TODO: Implement arc movement http://forum.demigiant.com/index.php?topic=26.0
         _playerView.GetTransform.DOMove(_settings.PlayerStartPosition, _settings.MoveToPositionsDuration).SetEase(Ease.Linear);
         _opponentView.GetTransform.DOMove(_opponentStartPosition, _settings.MoveToPositionsDuration).SetEase(Ease.Linear);
 
@@ -78,12 +94,12 @@ public class InitialActions : IInitializable
         _playerStartBlockTransfrom.DOMoveZ(playerStartPositionZ, _settings.MoveToPositionsDuration).SetEase(Ease.Linear);
 
         _opponentStartBlockTransfrom.DOMoveX(opponentStartPositionX, _settings.MoveToPositionsDuration).SetEase(Ease.Linear);
-        _opponentStartBlockTransfrom.DOMoveZ(opponentStartPositionZ, _settings.MoveToPositionsDuration).SetEase(Ease.Linear).OnComplete(SayInitialActionsDone);
+        _opponentStartBlockTransfrom.DOMoveZ(opponentStartPositionZ, _settings.MoveToPositionsDuration).SetEase(Ease.Linear).OnComplete(GetToNextState);
     }
 
-    private void SayInitialActionsDone()
+    private void GetToNextState()
     {
-        _signalBus.Fire(new InitialActionsDone());
+        _gameStateMachine.ChangeState<PlayerTurnState>();
     }
 
     [Serializable]
@@ -92,5 +108,6 @@ public class InitialActions : IInitializable
         public Vector3 PlayerStartPosition;
         public Vector3 PlayerBlockStartPosition;
         public float MoveToPositionsDuration;
+        public int initialTrapAmount;
     }
 }

@@ -1,58 +1,25 @@
 using UnityEngine;
 using Zenject;
 
-public class UserInputHandler : IInitializable, ITickable
+public class UserInputHandler : ITickable, IAbleToPause
 {
     private readonly UserInputState _inputState;
 
-    private readonly UserInputQueue _userInputQueue;
-
-    private readonly SignalBus _signalBus;
-
-    private readonly PlayerMoveHandler _playerMoveHandler;
+    private readonly DirectionsQueue _userInputQueue;
 
     private bool _shouldDetectInput = false;
 
-    private int _currentInputLimit = 6; //TODO: Initialize in Initial actions
+    private int _currentInputLimit = 0;
+
+    // Touch
+    private float _xPosOnSwipeStart1;
 
     public UserInputHandler(
         UserInputState inputState,
-        UserInputQueue userInputQueue,
-        SignalBus signalBus,
-        PlayerMoveHandler playerMoveHandler)
+        DirectionsQueue userInputQueue)
     {
         _inputState = inputState;
         _userInputQueue = userInputQueue;
-        _signalBus = signalBus;
-        _playerMoveHandler = playerMoveHandler;
-    }
-
-    public void Initialize()
-    {
-        _signalBus.Subscribe<InitialActionsDone>(() =>
-        {
-            _shouldDetectInput = true;
-            Debug.Log($"User input now should detect input. _shouldDetectInput = {_shouldDetectInput}");
-
-        });
-
-        _signalBus.Subscribe<PlayerFinishedPath>(() =>
-        {
-            Debug.Log("User input now shouldn't detect input");
-            _shouldDetectInput = false;
-        });
-        
-        _signalBus.Subscribe<OppenentFinishedPath>(() =>
-        {
-            Debug.Log("User input now should detect input");
-            _shouldDetectInput = true;
-        });
-
-        _signalBus.Subscribe((PathGenerationCompleted args) =>
-        {
-            _currentInputLimit = args.WaypointsAmount; // MISTAKE IF CHANGE RIGHTWAY CHECKER
-            Debug.Log($"_currentInputLimit = {_currentInputLimit}");
-        });
     }
 
     public void Tick()
@@ -64,46 +31,85 @@ public class UserInputHandler : IInitializable, ITickable
             return;
 
         EnqueueUserInput();
-
-        if (_userInputQueue.HasNextInputDirections)
-        {
-            ApplyUserInput();
-        }
     }
 
     private void EnqueueUserInput()
     {
-        _inputState.IsMovingLeft = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
-        _inputState.IsMovingRight = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
+        ListenForKeyboardInput();
+        ListenForTouchInput();
 
         if (_inputState.IsMovingRight)
         {
-            _userInputQueue.EnqueueInput(DirectionToMove.Right);
+            _userInputQueue.EnqueueDirection(Direction.Right);
             _currentInputLimit--;
-            Debug.Log("Enqueued user input - Right");
         }
 
         if (_inputState.IsMovingLeft)
         {
-            _userInputQueue.EnqueueInput(DirectionToMove.Left);
+            _userInputQueue.EnqueueDirection(Direction.Left);
             _currentInputLimit--;
-            Debug.Log("Enqueued user input - Left");
         }
     }
 
-    private void ApplyUserInput()
+    private void ListenForKeyboardInput()
     {
-        //Debug.Log("Try to handle move");
-        if (_playerMoveHandler.CanHandleMove)
+        _inputState.IsMovingLeft = Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A);
+        _inputState.IsMovingRight = Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D);
+    }
+
+    private void ListenForTouchInput()
+    {
+        if (Input.touchCount == 1)
         {
-            Debug.Log("Applyied user input");
-            _playerMoveHandler.HandleMove(_userInputQueue.GetNextDirection());
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase.Equals(TouchPhase.Began))
+            {
+                _xPosOnSwipeStart1 = touch.position.x;
+            }
+
+            if (touch.phase.Equals(TouchPhase.Ended) || touch.phase.Equals(TouchPhase.Canceled))
+            {
+                float xDist = Mathf.Abs(_xPosOnSwipeStart1 - touch.position.x);
+                if (xDist > 100)
+                {
+                    if (_xPosOnSwipeStart1 < touch.position.x)
+                    {
+                        _inputState.IsMovingRight = true;
+                        Debug.Log("Right swipe");
+                    }
+                    if(_xPosOnSwipeStart1 > touch.position.x)
+                    {
+                        _inputState.IsMovingLeft = true;
+                        Debug.Log("Left swipe");
+                    }
+                }
+            }
         }
+    }
+
+    public void SetShouldDetectInput(bool shouldDetectInput)
+    {
+        _shouldDetectInput = shouldDetectInput;
+    }
+
+    public void SetUserInputLimit(int inputLimit)
+    {
+        _currentInputLimit = inputLimit;
+    }
+
+    public void Pause()
+    {
+        _shouldDetectInput = false; // May cause bug!!!!
+    }
+
+    public void Unpause()
+    {
+        _shouldDetectInput = true;
     }
 }
 
-
-public enum DirectionToMove
+public enum Direction
 {
     Left,
     Right

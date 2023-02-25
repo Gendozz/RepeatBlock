@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UISpritesWhite
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 256
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: d306bd15efde4694e992c6bf0b42cb31, type: 3}
+    - {fileID: 2800000, guid: 10eacc127dbf69140a7e659dad69fc63, type: 3}
+    - {fileID: 2800000, guid: 732a28062c7b69942ac4ace9ac24845e, type: 3}
+    - {fileID: 2800000, guid: b584dd591a5e65b43a84451fe846f43a, type: 3}
+    - {fileID: 2800000, guid: c5fa1d2532c75864ca964081dd9edb71, type: 3}
+    - {fileID: 2800000, guid: c39d8d96a9eeece43b923658a06b7087, type: 3}
+    - {fileID: 2800000, guid: a561299b1c1a36a4fa09b1c0c9aef938, type: 3}
+    - {fileID: 2800000, guid: a5ac6902fd815834eb52cae6b954ff7b, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: a5ac6902fd815834eb52cae6b954ff7b, type: 3}
+  - {fileID: 21300000, guid: 10eacc127dbf69140a7e659dad69fc63, type: 3}
+  - {fileID: 21300000, guid: d306bd15efde4694e992c6bf0b42cb31, type: 3}
+  - {fileID: 21300000, guid: c5fa1d2532c75864ca964081dd9edb71, type: 3}
+  - {fileID: 21300000, guid: 732a28062c7b69942ac4ace9ac24845e, type: 3}
+  - {fileID: 21300000, guid: c39d8d96a9eeece43b923658a06b7087, type: 3}
+  - {fileID: 21300000, guid: b584dd591a5e65b43a84451fe846f43a, type: 3}
+  - {fileID: 21300000, guid: a561299b1c1a36a4fa09b1c0c9aef938, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - trophy
+  - audioOn
+  - audioOff
+  - musicOff
+  - cross
+  - musicOn
+  - gear
+  - question
+  m_RenderDataMap: {}
+  m_Tag: UISpritesWhite
+  m_IsVariant: 0

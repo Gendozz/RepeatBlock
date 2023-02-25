@@ -1,17 +1,19 @@
-public struct PathGenerationCompleted
-{
-    public int WaypointsAmount;
-}
-
-public struct InitialActionsDone { }
-
-public struct OppenentFinishedPath { }
-
 public struct PlayerMoved
 {
-    public DirectionToMove Direction;
+    public Direction Direction;
 }
 
-public struct PlayerFinishedPath { }
+public struct ScoreChanged
+{
+    public int score;
+}
 
-public struct PlayerDied { }
+public struct MaxScoreChanged
+{
+    public int maxScore;
+}
+
+public struct DataLoaded
+{
+    public Save save;
+}

@@ -6,7 +6,7 @@ public class BlockInstaller : Installer<BlockInstaller>
     {
         Container.Bind<BlockTunables>().AsSingle();
         Container.Bind<BlockMoveUpDown>().AsSingle();
-        Container.BindInterfacesTo<MoveTransformOnPlayerMove>().AsSingle();
+        Container.BindInterfacesAndSelfTo<MoveTransformOnPlayerMove>().AsSingle();
         Container.BindInterfacesTo<BlockOutOfViewChecker>().AsSingle();
     }
 }

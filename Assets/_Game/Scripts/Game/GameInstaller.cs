@@ -4,32 +4,83 @@ using Zenject;
 
 public class GameInstaller : MonoInstaller
 {
+    [SerializeField] private GameStarter _starter;
+    [SerializeField] private ApplicationFocusHandler _focusHandler;
+
     [Inject]
     private Settings _settings = null;
 
+    [SerializeField] private CommonSettings _commonSettings;
+
+    public override void Start()
+    {
+        base.Start();
+        ResolveGameStates();
+        Container.InstantiatePrefab(_starter);
+        Container.InstantiatePrefab(_focusHandler);
+    }
+
+    private void ResolveGameStates()
+    {
+        Container.Resolve<GameLoadState>();
+        Container.Resolve<MainMenuState>();
+        Container.Resolve<InitialActionsState>();
+        Container.Resolve<OpponentTurnState>();
+        Container.Resolve<PlayerTurnState>();
+        Container.Resolve<RestartGameState>();
+        Container.Resolve<LoseState>();
+    }
+
     public override void InstallBindings()
-    {        
-        Container.BindInterfacesAndSelfTo<PathGenerator>().AsSingle();
+    {
+        Container.Bind<PauseService>().AsSingle();
 
-        Container.Bind<RightWayChecker>().AsSingle();
-        Container.BindInterfacesAndSelfTo<AllBlocksMovedChecker>().AsSingle();
-        Container.BindInterfacesAndSelfTo<BlocksSpawner>().AsSingle();
+        Container.Bind<BlocksRegistry>().AsSingle();
 
-        Container.BindInterfacesTo<RestartGame>().AsSingle();
+        Container.BindInterfacesAndSelfTo<BlocksMoveHandler>().AsSingle();
+
+        Container.Bind<LoadedDataBuffer>().AsSingle();
+
+        Container.Bind<DirectionsProvider>().AsSingle();
+        Container.Bind<PositionsProvider>().AsSingle();
+
+        Container.Bind<PlayerMovesChecker>().AsSingle();
+
+        Container.Bind<BlocksSpawner>().AsSingle();
+
+        Container.Bind<RestartGame>().AsSingle();
 
         Container.Bind<PlayerView>().FromComponentInHierarchy().AsSingle();
         Container.Bind<OpponentView>().FromComponentInHierarchy().AsSingle();
 
+        Container.Bind<OpponentTurnController>().AsSingle().WithArguments(_commonSettings);
+
+        BindStateMachine();
+
         Container.BindInterfacesAndSelfTo<InitialActions>().AsSingle();
 
-        Container.BindFactory<BlockFacade, BlockFacade.Factory>()
-            .FromPoolableMemoryPool<BlockFacade, BlockFacadePool>(poolBinder => poolBinder
+        Container.BindInterfacesAndSelfTo<ScoreCounter>().AsSingle();
+
+        Container.BindFactory<bool, BlockFacade, BlockFacade.Factory>()
+            .FromPoolableMemoryPool<bool, BlockFacade, BlockFacadePool>(poolBinder => poolBinder
             .WithInitialSize(_settings.PoolInitialSize)
             .FromSubContainerResolve()
             .ByNewPrefabInstaller<BlockInstaller>(_settings.BlockFacadePrefab)
             .UnderTransformGroup("Blocks"));
 
         GameSignalsInstaller.Install(Container);
+    }
+
+    private void BindStateMachine()
+    {
+        Container.Bind<GameStateMachine>().AsSingle();
+        Container.BindInterfacesAndSelfTo<GameLoadState>().AsSingle();
+        Container.BindInterfacesAndSelfTo<MainMenuState>().AsSingle();
+        Container.BindInterfacesAndSelfTo<InitialActionsState>().AsSingle();
+        Container.BindInterfacesAndSelfTo<OpponentTurnState>().AsSingle();
+        Container.BindInterfacesAndSelfTo<PlayerTurnState>().AsSingle();
+        Container.BindInterfacesAndSelfTo<RestartGameState>().AsSingle();
+        Container.BindInterfacesAndSelfTo<LoseState>().AsSingle();
     }
 
 
@@ -40,7 +91,7 @@ public class GameInstaller : MonoInstaller
         public int PoolInitialSize;
     }
 
-    class BlockFacadePool : MonoPoolableMemoryPool<IMemoryPool, BlockFacade>
+    class BlockFacadePool : MonoPoolableMemoryPool<bool, IMemoryPool, BlockFacade>
     {
 
     }

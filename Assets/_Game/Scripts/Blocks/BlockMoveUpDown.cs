@@ -1,35 +1,46 @@
 using DG.Tweening;
 using System;
 
-public class BlockMoveUpDown
+public class BlockMoveUpDown : IAbleToPause
 {
     private readonly BlockView _view;
     
-    private readonly AllBlocksMovedChecker _allBlocksMovedChecker;
-
     public Settings _settings = null;
+
+    private Tween _tween;
 
     public BlockMoveUpDown(
         Settings settings, 
-        BlockView view,
-        AllBlocksMovedChecker allBlocksMovedChecker)
+        BlockView view)
     {
         _settings = settings;
         _view = view;
-        _allBlocksMovedChecker = allBlocksMovedChecker;
     }
 
-    public void Move()
+    public void MoveUpDown()
     {
-        _view.transform
-            .DOMoveY(_settings.yHeight, _settings.moveDuration).OnComplete(FireMoveCompleted);
+        _tween = _view.transform.DOMoveY(_settings.yHeight, _settings.moveDuration * 1.5f).SetEase(Ease.OutExpo).OnComplete(MoveDown);
     }
 
-    private void FireMoveCompleted()
+    public void MoveUp()
     {
-        _allBlocksMovedChecker.AddBlockAsChecked();
+        _tween = _view.transform.DOMoveY(_settings.yHeight, _settings.moveDuration * 1.5f).SetEase(Ease.OutExpo);
     }
 
+    public void MoveDown()
+    {
+        _tween = _view.transform.DOMoveY(-20, _settings.moveDuration * 1.5f).SetEase(Ease.InExpo); // TODO: Make not hardcoded
+    }
+
+    public void Pause()
+    {
+        _tween.Pause();
+    }
+
+    public void Unpause()
+    {
+        _tween.Play();
+    }
 
     [Serializable]
     public class Settings

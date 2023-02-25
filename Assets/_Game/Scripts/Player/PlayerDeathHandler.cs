@@ -1,28 +1,35 @@
 using System;
 using DG.Tweening;
-using UnityEngine;
-using Zenject;
 
-public class PlayerDeathHandler
+public class PlayerDeathHandler : IAbleToPause
 {
     private readonly PlayerView _playerView;
     
-    private readonly SignalBus _signalBus;
-
     public Settings _settings;
 
-    public PlayerDeathHandler(PlayerView playerView, SignalBus signalBus, Settings settings)
+    private Tween _moveTween;
+
+    public PlayerDeathHandler(
+        PlayerView playerView, 
+        Settings settings)
     {
         _playerView = playerView;
-        _signalBus = signalBus;
         _settings = settings;
     }
 
     public void Die()
     {
-        Debug.Log("Player died");
-        _playerView.transform.DOMoveY(_settings.fallToYPosition, _settings.loseFallingDuration);
-        _signalBus.Fire<PlayerDied>();
+        _moveTween = _playerView.transform.DOMoveY(_settings.fallToYPosition, _settings.loseFallingDuration);
+    }
+
+    public void Pause()
+    {
+        _moveTween.Pause();
+    }
+
+    public void Unpause()
+    {
+        _moveTween.Play();
     }
 
     [Serializable]

@@ -1,54 +1,84 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Zenject;
 
-public class PlayerMoveHandler
+public class PlayerMoveHandler : ITickable, IAbleToPause
 {
-    private readonly RightWayChecker _rightWayChecker;
+    private readonly CommonSettings _settings;
+
+    private readonly PlayerMovesChecker _playerMovesChecker;
 
     private readonly RotateInDirection _rotateInDirection;
 
-    private readonly PlayerDeathHandler _playerDeathHandler;
-
     private readonly SignalBus _signalBus;
+
+    private readonly DirectionsQueue _userInputQueue;
+
+    private GameStateMachine _gameStateMachine;
 
     public bool CanHandleMove
     {
         get
         {
-            //Debug.Log("Acsessed to CanHandleMove prop. Returned " + _rotateInDirection.IsFreeToUse);
             return _rotateInDirection.IsFreeToUse;
         }
     }
 
     public PlayerMoveHandler(
-        RightWayChecker rightWayChecker, 
+        CommonSettings settings,
+        PlayerMovesChecker rightWayChecker, 
         RotateInDirection rotateInDirection, 
-        PlayerDeathHandler playerDeathHandler, 
-        SignalBus signalBus)
+        SignalBus signalBus,
+        DirectionsQueue directionsQueue,
+        GameStateMachine gameStateMachine)
     {
-        _rightWayChecker = rightWayChecker;
+        _settings = settings;
+        _playerMovesChecker = rightWayChecker;
         _rotateInDirection = rotateInDirection;
-        _playerDeathHandler = playerDeathHandler;
         _signalBus = signalBus;
+        _userInputQueue = directionsQueue;
+        _gameStateMachine = gameStateMachine;
     }
 
-    public void HandleMove(DirectionToMove directionToMove)
+    public void Tick()
     {
-        _rotateInDirection.HandleMoveDirection(directionToMove);
-        _signalBus.Fire(new PlayerMoved { Direction = directionToMove });
-
-        bool isRightMove = _rightWayChecker.CheckMove(directionToMove);
-
-        if (!isRightMove)
+        if(!CanHandleMove) 
         {
-            WrongMoveActions();
+            return;
+        }
+
+        if (_userInputQueue.HasNextInputDirections)
+        {
+            HandleMove(_userInputQueue.GetNextDirection());
         }
     }
 
-    private async void WrongMoveActions()
+    public void HandleMove(Direction directionToMove)
+    {        
+        _signalBus.Fire(new PlayerMoved { Direction = directionToMove });
+
+        _rotateInDirection.HandleMoveDirection(directionToMove);
+
+        bool isRightMove = _playerMovesChecker.CheckMove(directionToMove);
+
+        if(!isRightMove)
+        {
+            WrongMoveActions();            
+        }
+    }
+
+    private async UniTaskVoid WrongMoveActions()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(_rotateInDirection._settings.moveDuration));
-        _playerDeathHandler.Die();
+        await UniTask.WaitUntil(() => CanHandleMove == true);
+        _gameStateMachine.ChangeState<LoseState>();
+    }
+
+    public void Pause()
+    {
+        _rotateInDirection.Pause();
+    }
+
+    public void Unpause()
+    {
+        _rotateInDirection.Unpause();
     }
 }

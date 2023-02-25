@@ -5,15 +5,10 @@ public class GameSignalsInstaller : Installer<GameSignalsInstaller>
     public override void InstallBindings()
     {
         SignalBusInstaller.Install(Container);
-
-        Container.DeclareSignal<PlayerFinishedPath>();
         Container.DeclareSignal<PlayerMoved>();
-        Container.DeclareSignal<PlayerDied>();
+        Container.DeclareSignal<ScoreChanged>();
+        Container.DeclareSignal<MaxScoreChanged>();
 
-        Container.DeclareSignal<PathGenerationCompleted>();
-
-        Container.DeclareSignal<OppenentFinishedPath>();
-
-        Container.DeclareSignal<InitialActionsDone>();
+        Container.DeclareSignal<DataLoaded>();
     }
 }
