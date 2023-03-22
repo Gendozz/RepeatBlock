@@ -1,8 +1,12 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 using Zenject;
 
 public class UserInputHandler : ITickable, IAbleToPause
 {
+    [DllImport("__Internal")]
+    private static extern void PrintToConsole(string textToprint);
+
     private readonly UserInputState _inputState;
 
     private readonly DirectionsQueue _userInputQueue;
@@ -77,11 +81,19 @@ public class UserInputHandler : ITickable, IAbleToPause
                     {
                         _inputState.IsMovingRight = true;
                         Debug.Log("Right swipe");
+#if !UNITY_EDITOR
+                        PrintToConsole("Right swipe"); 
+#endif
+
                     }
-                    if(_xPosOnSwipeStart1 > touch.position.x)
+                    if (_xPosOnSwipeStart1 > touch.position.x)
                     {
                         _inputState.IsMovingLeft = true;
                         Debug.Log("Left swipe");
+#if !UNITY_EDITOR
+                        PrintToConsole("Left swipe"); 
+#endif
+
                     }
                 }
             }

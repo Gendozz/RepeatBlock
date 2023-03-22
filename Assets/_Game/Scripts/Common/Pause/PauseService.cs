@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 public class PauseService
 {
+    [DllImport("__Internal")]
+    private static extern void PrintToConsole(string textToprint);
+
     private List<IAbleToPause> _ableToPauseObjects;
 
     public bool IsGamePaused { get; private set; } = false;
@@ -31,8 +35,13 @@ public class PauseService
         {
             ableToPauseObject.Pause();
         }
+
+#if !UNITY_EDITOR
+        PrintToConsole("Pause Service - Pause All");
+
+#endif
     }
-    
+
     public void UnpauseAll()
     {
         IsGamePaused = false;

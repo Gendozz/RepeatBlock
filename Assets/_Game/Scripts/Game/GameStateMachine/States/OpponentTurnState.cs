@@ -34,6 +34,5 @@ public class OpponentTurnState : IState
     public void Exit()
     {
         _pauseService.RemoveAbleToPause(_opponentTurnController);
-        _cameraMovement.SetPlayerAsTarget();
     }
 }

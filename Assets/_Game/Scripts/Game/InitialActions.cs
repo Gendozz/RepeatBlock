@@ -28,6 +28,8 @@ public class InitialActions
 
     private BlocksRegistry _blocksRegistry;
 
+    private CameraMovement _cameraMovement;
+
     public InitialActions(
         Settings settings,
         DirectionsProvider directionsProvider,
@@ -36,7 +38,8 @@ public class InitialActions
         PlayerView playerView,
         OpponentView opponentView,
         GameStateMachine gameStateMachine,
-        BlocksRegistry blocksRegistry
+        BlocksRegistry blocksRegistry,
+        CameraMovement cameraMovement
         )
     {
         _settings = settings;
@@ -47,6 +50,7 @@ public class InitialActions
         _opponentView = opponentView;
         _gameStateMachine = gameStateMachine;
         _blocksRegistry = blocksRegistry;
+        _cameraMovement = cameraMovement;
     }
 
     public void Initialize()
@@ -99,6 +103,7 @@ public class InitialActions
 
     private void GetToNextState()
     {
+        _cameraMovement.StartMoving();
         _gameStateMachine.ChangeState<PlayerTurnState>();
     }
 

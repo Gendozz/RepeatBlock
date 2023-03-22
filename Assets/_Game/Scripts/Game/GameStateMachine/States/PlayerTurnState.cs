@@ -8,13 +8,16 @@ public class PlayerTurnState : IState
 
     private ScoreCounter _scoreCounter;
 
+    private CameraMovement _cameraMovement;
+
     private int _inputLimit;
 
     public PlayerTurnState(
         GameStateMachine gameStateMachine, 
         PlayerFacade playerFacade, 
         DirectionsProvider directionsProvider, 
-        ScoreCounter scoreCounter)
+        ScoreCounter scoreCounter,
+        CameraMovement cameraMovement)
     {
         _gameStateMachine = gameStateMachine;
         _gameStateMachine.AddState(this);
@@ -22,6 +25,7 @@ public class PlayerTurnState : IState
         _playerFacade = playerFacade;
         _directionsProvider = directionsProvider;
         _scoreCounter = scoreCounter;
+        _cameraMovement = cameraMovement;
     }
 
     public void Enter()
@@ -30,6 +34,8 @@ public class PlayerTurnState : IState
 
         _playerFacade.SetUserInputLimit(_inputLimit);
         _playerFacade.SetShouldDetectInput(true);
+        _cameraMovement.SetPlayerAsTarget();
+
     }
 
     public void Exit()

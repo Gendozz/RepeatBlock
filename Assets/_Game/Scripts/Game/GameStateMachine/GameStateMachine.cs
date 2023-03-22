@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class GameStateMachine
 {
+    [DllImport("__Internal")]
+    private static extern void PrintToConsole(string textToprint);
+
     private readonly Dictionary<Type, IState> _states;
     private IState _activeState;
 
@@ -32,6 +36,10 @@ public class GameStateMachine
         }
         
         _activeState.Enter();
+
+#if !UNITY_EDITOR
+        PrintToConsole($"--- ENTER --- {typeof(TState)} GSM"); 
+#endif
         //Debug.Log($"--- ENTER --- {typeof(TState)} GSM");
     }
 }

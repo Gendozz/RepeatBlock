@@ -5,7 +5,8 @@ using Zenject;
 public class GameInstaller : MonoInstaller
 {
     [SerializeField] private GameStarter _starter;
-    [SerializeField] private ApplicationFocusHandler _focusHandler;
+    //[SerializeField] private ApplicationFocusHandler _focusHandler;
+    //[SerializeField] private Yandex _yandex;
 
     [Inject]
     private Settings _settings = null;
@@ -17,7 +18,8 @@ public class GameInstaller : MonoInstaller
         base.Start();
         ResolveGameStates();
         Container.InstantiatePrefab(_starter);
-        Container.InstantiatePrefab(_focusHandler);
+        //Container.InstantiatePrefab(_focusHandler);
+        //Container.InstantiatePrefab(_yandex);
     }
 
     private void ResolveGameStates()
@@ -34,6 +36,8 @@ public class GameInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.Bind<PauseService>().AsSingle();
+
+        //Container.Bind<ApplicationFocusHandler>().FromInstance(_focusHandler);
 
         Container.Bind<BlocksRegistry>().AsSingle();
 
