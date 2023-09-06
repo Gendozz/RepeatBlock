@@ -1,5 +1,13 @@
-﻿internal class GameLoadState : IState
+﻿using System.Runtime.InteropServices;
+
+internal class GameLoadState : IState
 {
+    //[DllImport("__Internal")]
+    //private static extern void FocusWindow();
+
+    [DllImport("__Internal")]
+    private static extern void PrintToConsole(string textToprint);
+
     private readonly GameStateMachine _gameStateMachine;
     private readonly LoadedDataBuffer _loadedDataBuffer;
     private readonly AudioHandler _audioHandler;
@@ -24,6 +32,10 @@
 
     public void Exit()
     {
-        
+
+//#if !UNITY_EDITOR
+//        FocusWindow();
+//        PrintToConsole("FocusWindow called from Exit of GameLoadState"); 
+//#endif
     }
 }

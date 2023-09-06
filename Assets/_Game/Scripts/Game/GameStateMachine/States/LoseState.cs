@@ -15,7 +15,7 @@ public class LoseState : IState
 
     private RestartGame _restartGame; // TODO: Put in GameRestartState    
 
-    private ApplicationFocusHandler _focusHandler;
+    //private ApplicationFocusHandler _focusHandler;
 
     private Yandex _yandex;
 
@@ -29,14 +29,15 @@ public class LoseState : IState
         GameStateMachine gameStateMachine,
         PlayerFacade playerFacade,
         RestartGame restartGame,
-        Yandex yandex,
-        ApplicationFocusHandler applicationFocusHandler)
+        Yandex yandex
+        //,ApplicationFocusHandler applicationFocusHandler
+        )
     {
         _gameStateMachine = gameStateMachine;
         _playerFacade = playerFacade;
         _restartGame = restartGame;
         _yandex = yandex;
-        _focusHandler = applicationFocusHandler;
+        //_focusHandler = applicationFocusHandler;
 
         _gameStateMachine.AddState(this);
         _yandex.AdOpenCallback += AdOpenedActions;
@@ -60,7 +61,7 @@ public class LoseState : IState
     public async void AdOpenedActions()
     {
         _wasAdOpened = true;
-        _focusHandler.PauseAudio(true);
+        _yandex.Pause();
 
         await UniTask.WaitUntil(() => _testWait == true, cancellationToken: _cts.Token);
 
